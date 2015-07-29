@@ -818,15 +818,10 @@ class Edit extends Form
      */
     public function findValidationTooltip($text)
     {
-        return $this->spin(function () use ($text) {
-            return $this->find(
-                'css',
-                sprintf(
-                    '.validation-errors span:contains("%s")',
-                    $text
-                )
-            );
-        });
+        $selector = sprintf('.validation-errors span:contains("%s")', $text );
+        return $this->spin(function () use ($selector) {
+            return $this->find('css', $selector);
+        }, sprintf('Unable to find selector %s', $selector));
     }
 
     /**

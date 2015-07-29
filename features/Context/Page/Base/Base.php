@@ -279,13 +279,19 @@ class Base extends Page
     /**
      * Find a validation tooltip containing a text
      *
-     * @param string $text
+     * @param string $error
      *
      * @return null|Element
      */
-    public function findValidationTooltip($text)
+    public function findValidationTooltip($error)
     {
-        return $this->find('css', sprintf('.validation-tooltip[data-original-title="%s"]', $text));
+        $errorElement = $this->find('css', sprintf('.validation-tooltip[data-original-title="%s"]', $error));
+
+        if (!$errorElement) {
+            $this->getMainContext()->wait();
+            $errors = $this->getCurrentPage()->getValidationErrors();
+            assertTrue(in_array($error, $errors), sprintf('Expecting to see validation error "%s", not found', $error));
+        }
     }
 
     /**
